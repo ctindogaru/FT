@@ -32,7 +32,7 @@ pub struct Wallet {
 
 #[near_bindgen]
 impl Wallet {
-    pub fn getVersionNumber() -> (u8, u8, u8, u8) {
+    pub fn get_version_number() -> (u8, u8, u8, u8) {
         (1, 2, 0, 0)
     }
 
