@@ -1,15 +1,52 @@
+use hex;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::near_bindgen;
+use near_sdk::json_types::{ValidAccountId, U128};
+use near_sdk::{ext_contract, near_bindgen, AccountId};
+use sha3::{Digest, Keccak256};
+use std::time::SystemTime;
+
+fn keccak256(text: String) -> String {
+    let mut hasher = Keccak256::new();
+    hasher.update(text.as_bytes());
+    let result = hasher.finalize();
+    hex::encode(result)
+}
+
+#[ext_contract(ext_iwallet)]
+trait IWallet {
+    fn available_balance(&self) -> U128;
+
+    fn transfer_to(&mut self, to_wallet: AccountId, value: U128) -> bool;
+    fn withdraw(&mut self, value: U128) -> bool;
+    fn transfer_controller(&mut self, new_controller: AccountId);
+}
 
 #[near_bindgen]
 #[derive(Default, BorshDeserialize, BorshSerialize)]
 pub struct Wallet {
-    // SETUP CONTRACT STATE
+    erc20_token: AccountId,
+    created_block: u64,
+    user_id: AccountId,
+    controller_role: String,
 }
 
 #[near_bindgen]
 impl Wallet {
-    // ADD CONTRACT METHODS HERE
+    pub fn getVersionNumber() -> (u8, u8, u8, u8) {
+        (1, 2, 0, 0)
+    }
+
+    pub fn initialize(
+        &mut self,
+        erc20_token: AccountId,
+        controller: AccountId,
+        user_id: AccountId,
+    ) {
+        self.erc20_token = erc20_token;
+        self.created_block =
+            SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
+        self.user_id = user_id;
+    }
 }
 
 /*
@@ -24,8 +61,7 @@ impl Wallet {
 mod tests {
     use super::*;
     use near_sdk::test_utils::{get_logs, VMContextBuilder};
-    use near_sdk::{testing_env};
-    use near_sdk::json_types::{ValidAccountId};
+    use near_sdk::testing_env;
 
     // part of writing unit tests is setting up a mock context
     // provide a `predecessor` here, it'll modify the default context
