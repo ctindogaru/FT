@@ -1,5 +1,4 @@
-use defi::DeFiContract;
-use hc_token::TokenContract as FtContract;
+use hc_token::TokenContract as TokenContract;
 
 use near_sdk::json_types::U128;
 use near_sdk::serde_json::json;
@@ -10,11 +9,9 @@ use near_sdk_sim::{
 // Load in contract bytes at runtime
 near_sdk_sim::lazy_static_include::lazy_static_include_bytes! {
     FT_WASM_BYTES => "res/hc_token.wasm",
-    DEFI_WASM_BYTES => "res/defi.wasm",
 }
 
 const FT_ID: &str = "ft";
-const DEFI_ID: &str = "defi";
 
 // Register the given `user` with FT contract
 pub fn register_user(user: &near_sdk_sim::UserAccount) {
@@ -59,12 +56,12 @@ pub fn init_no_macros(initial_balance: u128) -> (UserAccount, UserAccount, UserA
 
 pub fn init_with_macros(
     initial_balance: u128,
-) -> (UserAccount, ContractAccount<FtContract>, ContractAccount<DeFiContract>, UserAccount) {
+) -> (UserAccount, ContractAccount<TokenContract>, UserAccount) {
     let root = init_simulator(None);
     // uses default values for deposit and gas
     let ft = deploy!(
         // Contract Proxy
-        contract: FtContract,
+        contract: TokenContract,
         // Contract account id
         contract_id: FT_ID,
         // Bytes of contract
@@ -80,15 +77,5 @@ pub fn init_with_macros(
     let alice = root.create_user("alice".to_string(), to_yocto("100"));
     register_user(&alice);
 
-    let defi = deploy!(
-        contract: DeFiContract,
-        contract_id: DEFI_ID,
-        bytes: &DEFI_WASM_BYTES,
-        signer_account: root,
-        init_method: new(
-            ft.valid_account_id()
-        )
-    );
-
-    (root, ft, defi, alice)
+    (root, ft, alice)
 }
