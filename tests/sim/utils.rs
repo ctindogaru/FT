@@ -1,5 +1,5 @@
 use defi::DeFiContract;
-use fungible_token::ContractContract as FtContract;
+use hc_token::TokenContract as FtContract;
 
 use near_sdk::json_types::U128;
 use near_sdk::serde_json::json;
@@ -9,7 +9,7 @@ use near_sdk_sim::{
 
 // Load in contract bytes at runtime
 near_sdk_sim::lazy_static_include::lazy_static_include_bytes! {
-    FT_WASM_BYTES => "res/fungible_token.wasm",
+    FT_WASM_BYTES => "res/hc_token.wasm",
     DEFI_WASM_BYTES => "res/defi.wasm",
 }
 
@@ -39,7 +39,7 @@ pub fn init_no_macros(initial_balance: u128) -> (UserAccount, UserAccount, UserA
 
     ft.call(
         FT_ID.into(),
-        "new_default_meta",
+        "new",
         &json!({
             "owner_id": root.valid_account_id(),
             "total_supply": U128::from(initial_balance),
@@ -72,7 +72,7 @@ pub fn init_with_macros(
         // User deploying the contract,
         signer_account: root,
         // init method
-        init_method: new_default_meta(
+        init_method: new(
             root.valid_account_id(),
             initial_balance.into()
         )

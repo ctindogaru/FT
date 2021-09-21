@@ -9,7 +9,6 @@ near-sdk = "3.1.0"
 near-sdk-sim = "3.1.1"
 
 # remember to include a line for each contract
-fungible-token = { path = "./ft" }
 defi = { path = "./test-contract-defi" }
 hc-wallet = { path = "./humanity-cash-wallet" }
 hc-token = { path = "./humanity-cash-token" }
@@ -27,7 +26,6 @@ overflow-checks = true
 [workspace]
 # remember to include a member for each contract
 members = [
-  "ft",
   "test-contract-defi",
   "humanity-cash-wallet",
   "humanity-cash-token",
