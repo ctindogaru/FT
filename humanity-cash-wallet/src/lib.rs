@@ -14,11 +14,13 @@ fn keccak256(text: String) -> String {
 
 #[ext_contract(ext_iwallet)]
 trait IWallet {
-    fn available_balance(&self) -> U128;
-
+    // change methods
     fn transfer_to(&mut self, to_wallet: AccountId, value: U128) -> bool;
     fn withdraw(&mut self, value: U128) -> bool;
     fn transfer_controller(&mut self, new_controller: AccountId);
+
+    // view methods
+    fn available_balance(&self) -> U128;
 }
 
 #[near_bindgen]

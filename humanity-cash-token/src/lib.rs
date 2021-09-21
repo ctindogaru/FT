@@ -1,5 +1,14 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::near_bindgen;
+use near_sdk::{ext_contract, near_bindgen};
+
+#[ext_contract(ext_itoken)]
+trait IToken {
+    // change methods
+    fn ft_transfer(&mut self, receiver_id: String, amount: String, memo: Option<String>);
+
+    // view methods
+    fn ft_balance_of(&self, account_id: String) -> String;
+}
 
 #[near_bindgen]
 #[derive(Default, BorshDeserialize, BorshSerialize)]
