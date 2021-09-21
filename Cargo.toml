@@ -13,6 +13,7 @@ fungible-token = { path = "./ft" }
 defi = { path = "./test-contract-defi" }
 hc-wallet = { path = "./humanity-cash-wallet" }
 hc-token = { path = "./humanity-cash-token" }
+hc-controller = { path = "./humanity-cash-controller" }
 
 [profile.release]
 codegen-units = 1
@@ -30,4 +31,5 @@ members = [
   "test-contract-defi",
   "humanity-cash-wallet",
   "humanity-cash-token",
+  "humanity-cash-controller",
 ]
