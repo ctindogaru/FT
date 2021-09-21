@@ -11,6 +11,7 @@ near-sdk-sim = "3.1.1"
 # remember to include a line for each contract
 fungible-token = { path = "./ft" }
 defi = { path = "./test-contract-defi" }
+hc-wallet = { path = "./humanity-cash-wallet" }
 
 [profile.release]
 codegen-units = 1
@@ -26,4 +27,5 @@ overflow-checks = true
 members = [
   "ft",
   "test-contract-defi",
+  "humanity-cash-wallet",
 ]

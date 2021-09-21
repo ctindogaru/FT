@@ -998,6 +998,7 @@ version = "0.0.1"
 dependencies = [
  "defi",
  "fungible-token",
+ "hc-wallet",
  "near-sdk",
  "near-sdk-sim",
 ]
@@ -1188,6 +1189,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d7afe4a420e3fe79967a00898cc1f4db7c8a49a9333a29f8a4bd76a253d5cd04"
 dependencies = [
  "ahash",
+]
+
+[[package]]
+name = "hc-wallet"
+version = "1.0.0"
+dependencies = [
+ "near-contract-standards",
+ "near-sdk",
 ]
 
 [[package]]
