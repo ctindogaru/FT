@@ -1,7 +1,7 @@
 use hex;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::json_types::{ValidAccountId, U128};
-use near_sdk::{AccountId, env, ext_contract, near_bindgen};
+use near_sdk::{env, ext_contract, near_bindgen, AccountId, Promise, PromiseResult};
 use sha3::{Digest, Keccak256};
 use std::time::SystemTime;
 
@@ -12,6 +12,12 @@ trait IToken {
 
     // view methods
     fn ft_balance_of(&self, account_id: String) -> String;
+}
+
+#[ext_contract(ext_iwallet)]
+trait IWallet {
+    // view methods
+    fn available_balance_callback(&self) -> u128;
 }
 
 fn keccak256(text: String) -> String {
@@ -48,13 +54,32 @@ impl Wallet {
         self.user_id = user_id;
     }
 
-    fn available_balance(&self) {
+    pub fn available_balance_callback(&self) -> u128 {
+        assert_eq!(env::promise_results_count(), 1, "This is a callback method");
+
+        // handle the result from the cross contract call this method is a callback for
+        match env::promise_result(0) {
+            PromiseResult::NotReady => unreachable!(),
+            PromiseResult::Failed => 0,
+            PromiseResult::Successful(result) => {
+                let balance = near_sdk::serde_json::from_slice::<U128>(&result).unwrap();
+                balance.0
+            }
+        }
+    }
+
+    pub fn available_balance(&self) -> Promise {
         ext_itoken::ft_balance_of(
             env::current_account_id().to_string(), // ext_itoken takes an account_id as a parameter
             &self.erc20_token.to_string(),         // contract account id
             0,                                     // yocto NEAR to attach
             5_000_000_000_000,                     // gas to attach
-        );
+        )
+        .then(ext_iwallet::available_balance_callback(
+            &env::current_account_id(), // this contract's account id
+            0,                          // yocto NEAR to attach to the callback
+            5_000_000_000_000,          // gas to attach to the callback
+        ))
     }
 }
 

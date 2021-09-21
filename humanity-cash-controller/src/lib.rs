@@ -1,6 +1,6 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{AccountId, ext_contract, near_bindgen};
-use near_sdk::json_types::{U128};
+use near_sdk::json_types::U128;
+use near_sdk::{ext_contract, near_bindgen, AccountId};
 
 #[ext_contract(ext_iwallet)]
 trait IWallet {
@@ -37,7 +37,7 @@ mod tests {
     use super::*;
     use near_sdk::json_types::ValidAccountId;
     use near_sdk::test_utils::{get_logs, VMContextBuilder};
-    use near_sdk::{testing_env};
+    use near_sdk::testing_env;
 
     // part of writing unit tests is setting up a mock context
     // provide a `predecessor` here, it'll modify the default context
