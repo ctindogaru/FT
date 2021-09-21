@@ -49,8 +49,8 @@ impl Wallet {
         user_id: AccountId,
     ) {
         self.erc20_token = erc20_token;
-        self.created_block =
-            SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
+        // self.created_block =
+        //     SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
         self.user_id = user_id;
         self.controller_role = keccak256(String::from("CONTROLLER_ROLE"));
     }
