@@ -52,6 +52,7 @@ impl Wallet {
         self.created_block =
             SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs();
         self.user_id = user_id;
+        self.controller_role = keccak256(String::from("CONTROLLER_ROLE"));
     }
 
     pub fn available_balance_callback(&self) -> u128 {
